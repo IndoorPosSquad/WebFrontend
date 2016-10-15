@@ -1,0 +1,46 @@
+/* Stylesheet for Kalman Filter page:
+ *	- style options for jQuery UI sliders
+ *	- styling for options, including the matrix tables
+ */
+
+
+/* jQuery UI style configurations */
+.ui-slider {
+	height: 10px;
+}
+
+.ui-slider .ui-slider-handle {
+	width: 12px;
+	margin-left: -6px;
+	height: 12px;
+	margin-top: 3px;
+}
+
+
+/* options (table containing sliders) style */
+#kf_options td {
+	text-align: center;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+/* Matrix Table */
+.matrix {
+	display: inline-block;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.matrix td, th {
+	text-align: center;
+	width: 30px;
+	padding: 1px;
+	margin: 0px;
+}
+
+/* Matrix input field */
+.matrix td input {
+	width: 30px;
+	height: 30px;
+	text-align: center;
+}

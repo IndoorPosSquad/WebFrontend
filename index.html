@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+  <title>Kalman Filter Simulation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" type="text/css" href="static/main_style.css">
+  <link rel="stylesheet" type="text/css" href="static/menu_and_banner.css">
+  <!--link rel="stylesheet" type="text/css" href="/~teammco/css/bgcanvas.css"-->
+  <link rel="stylesheet" type="text/css" href="static/footer.css">
+  <script type="text/javascript" src="static/jquery-1.js"></script>
+
+  <!-- jQuery UI sliders: -->
+  <link rel="stylesheet" href="static/sunny.css">
+  <script src="static/jquery-ui-slider.js"></script>
+
+  <!-- main page stylesheet: updated style for sliders -->
+  <link rel="stylesheet" href="static/style.css">
+
+  <!-- main page Javascript code: contains slider code -->
+  <script type="text/javascript" src="static/script.js"></script>
+</head>
+
+
+<body>
+  <div id="container">
+    <div id="content">
+
+      <!-- Kalman Filter Canvas -->
+      <p><canvas id="kf_canvas" width="860" height="540" style="background: #000000" onmousemove=""><!--onmousedown="toggleMove(event);"-->
+        Your browser does not support the canvas element.
+      </canvas></p>
+
+      <!-- Include Kalman Filter script (and Sylvester.js library) -->
+      <script type="text/javascript" src="static/sylvester.js"></script>
+      <script type="text/javascript" src="static/kalmanFilter.js"></script>
+
+      <p>
+        Move your mouse around the screen.
+        The Kalman Filter will reduce input noise and predict your movement.
+      </p>
+
+
+      <p>
+        <!--- Buttons --->
+        <button onclick="toggleAnimation();" title="Pause and Resume Animation" style="width: 110px;">
+          <font color="#006600"><b><span id="on_or_off">Pause</span></b></font></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+
+        <button onclick="resetValues();" title="Reset Everything to Default">
+          <font color="#990000"><b>Restore Default Values</b></font></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+
+        <button onclick="restart();" title="Clear Screen, Reset Values and Restart Animation" style="width: 110px;">
+          <font color="#990000"><b>Restart</b></font></button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+
+        <small><font color="#006600"><b>Show Prediction:</b></font></small>
+        <input id="predict_check" onchange="togglePrediction();" type="checkbox">
+      </p>
+
+
+      <p>
+      </p><table id="A_matrix" class="matrix">
+        <tbody><tr>
+          <td> <input value="1" id="A_0"> </td>
+          <td> <input value="0" id="A_1"> </td>
+          <td> <input value="0.2" id="A_2"> </td>
+          <td> <input value="0" id="A_3"> </td>
+        </tr><tr>
+          <td> <input value="0" id="A_4"> </td>
+          <td> <input value="1" id="A_5"> </td>
+          <td> <input value="0" id="A_6"> </td>
+          <td> <input value="0.2" id="A_7"> </td>
+        </tr><tr>
+          <td> <input value="0" id="A_8"> </td>
+          <td> <input value="0" id="A_9"> </td>
+          <td> <input value="1" id="A_10"> </td>
+          <td> <input value="0" id="A_11"> </td>
+        </tr><tr>
+          <td> <input value="0" id="A_12"> </td>
+          <td> <input value="0" id="A_13"> </td>
+          <td> <input value="0" id="A_14"> </td>
+          <td> <input value="1" id="A_15"> </td>
+        </tr><tr>
+          <th colspan="4">
+            A Matrix
+          </th>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <small>State Transition</small>
+          </td>
+        </tr>
+        </tbody></table>
+        <table id="B_matrix" class="matrix">
+          <tbody><tr>
+            <td> <input value="1" id="B_0"> </td>
+            <td> <input value="0" id="B_1"> </td>
+            <td> <input value="0" id="B_2"> </td>
+            <td> <input value="0" id="B_3"> </td>
+          </tr><tr>
+            <td> <input value="0" id="B_4"> </td>
+            <td> <input value="1" id="B_5"> </td>
+            <td> <input value="0" id="B_6"> </td>
+            <td> <input value="0" id="B_7"> </td>
+          </tr><tr>
+            <td> <input value="0" id="B_8"> </td>
+            <td> <input value="0" id="B_9"> </td>
+            <td> <input value="1" id="B_10"> </td>
+            <td> <input value="0" id="B_11"> </td>
+          </tr><tr>
+            <td> <input value="0" id="B_12"> </td>
+            <td> <input value="0" id="B_13"> </td>
+            <td> <input value="0" id="B_14"> </td>
+            <td> <input value="1" id="B_15"> </td>
+          </tr><tr>
+            <th colspan="4">
+              B Matrix
+            </th>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <small>Input Control</small>
+            </td>
+          </tr>
+          </tbody></table>
+        <table id="H_matrix" class="matrix">
+          <tbody><tr>
+            <td> <input value="1" id="H_0"> </td>
+            <td> <input value="0" id="H_1"> </td>
+            <td> <input value="1" id="H_2"> </td>
+            <td> <input value="0" id="H_3"> </td>
+          </tr><tr>
+            <td> <input value="0" id="H_4"> </td>
+            <td> <input value="1" id="H_5"> </td>
+            <td> <input value="0" id="H_6"> </td>
+            <td> <input value="1" id="H_7"> </td>
+          </tr><tr>
+            <td> <input value="0" id="H_8"> </td>
+            <td> <input value="0" id="H_9"> </td>
+            <td> <input value="0" id="H_10"> </td>
+            <td> <input value="0" id="H_11"> </td>
+          </tr><tr>
+            <td> <input value="0" id="H_12"> </td>
+            <td> <input value="0" id="H_13"> </td>
+            <td> <input value="0" id="H_14"> </td>
+            <td> <input value="0" id="H_15"> </td>
+          </tr><tr>
+            <th colspan="4">
+              H Matrix
+            </th>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <small>Measurement</small>
+            </td>
+          </tr>
+          </tbody></table>
+        <table id="Q_matrix" class="matrix">
+          <tbody><tr>
+            <td> <input value="0" id="Q_0"> </td>
+            <td> <input value="0" id="Q_1"> </td>
+            <td> <input value="0" id="Q_2"> </td>
+            <td> <input value="0" id="Q_3"> </td>
+          </tr><tr>
+            <td> <input value="0" id="Q_4"> </td>
+            <td> <input value="0" id="Q_5"> </td>
+            <td> <input value="0" id="Q_6"> </td>
+            <td> <input value="0" id="Q_7"> </td>
+          </tr><tr>
+            <td> <input value="0" id="Q_8"> </td>
+            <td> <input value="0" id="Q_9"> </td>
+            <td> <input value="0.1" id="Q_10"> </td>
+            <td> <input value="0" id="Q_11"> </td>
+          </tr><tr>
+            <td> <input value="0" id="Q_12"> </td>
+            <td> <input value="0" id="Q_13"> </td>
+            <td> <input value="0" id="Q_14"> </td>
+            <td> <input value="0.1" id="Q_15"> </td>
+          </tr><tr>
+            <th colspan="4">
+              Q Matrix
+            </th>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <small>Action Uncertainty</small>
+            </td>
+          </tr>
+          </tbody></table>
+        <table id="R_matrix" class="matrix">
+          <tbody><tr>
+            <td> <input value="0.1" id="R_0"> </td>
+            <td> <input value="0" id="R_1"> </td>
+            <td> <input value="0" id="R_2"> </td>
+            <td> <input value="0" id="R_3"> </td>
+          </tr><tr>
+            <td> <input value="0" id="R_4"> </td>
+            <td> <input value="0.1" id="R_5"> </td>
+            <td> <input value="0" id="R_6"> </td>
+            <td> <input value="0" id="R_7"> </td>
+          </tr><tr>
+            <td> <input value="0" id="R_8"> </td>
+            <td> <input value="0" id="R_9"> </td>
+            <td> <input value="0.1" id="R_10"> </td>
+            <td> <input value="0" id="R_11"> </td>
+          </tr><tr>
+            <td> <input value="0" id="R_12"> </td>
+            <td> <input value="0" id="R_13"> </td>
+            <td> <input value="0" id="R_14"> </td>
+            <td> <input value="0.1" id="R_15"> </td>
+          </tr><tr>
+            <th colspan="4">
+              R Matrix
+            </th>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <small>Sensor Noise</small>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <center>
+          <table id="kf_options">
+            <!--- Kalman Filter options (sliders) --->
+            <tbody><tr>
+              <td>
+                <b>X-Axis Random Noise:</b>
+                <div class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" style="width:300px;" id="x_noise_slider"><a style="left: 25%;" class="ui-slider-handle ui-state-default ui-corner-all" href="#"></a></div>
+                <div id="x_noise_val">0</div>
+              </td>
+              <td>
+                <b>Y-Axis Random Noise:</b>
+                <div class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" style="width:300px;" id="y_noise_slider"><a style="left: 25%;" class="ui-slider-handle ui-state-default ui-corner-all" href="#"></a></div>
+                <div id="y_noise_val">0</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <b>Fade-Out Time (sec):</b>
+                <div class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" style="width:300px;" id="fade_slider"><a style="left: 19.1919%;" class="ui-slider-handle ui-state-default ui-corner-all" href="#"></a></div>
+                <div id="fade_val">2.0</div>
+              </td>
+              <td>
+                <b>Prediction Amount (sec):</b>
+                <div class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" style="width:300px;" id="predict_slider"><a style="left: 25%;" class="ui-slider-handle ui-state-default ui-corner-all" href="#"></a></div>
+                <div id="predict_val">0.5</div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </center>
+        <br><br>
+    </div>
+  </div>
+</body>
+</html>
