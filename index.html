@@ -56,10 +56,39 @@
         <small><font color="#006600"><b>Show Prediction:</b></font></small>
         <input id="predict_check" onchange="togglePrediction();" type="checkbox">
       </p>
-
-
-      <p>
-      </p><table id="A_matrix" class="matrix">
+      <table class="coord" style="margin-top:10px;">
+            <tr>
+                <td> 
+                    <input value="200" name="coord_0"> 
+                    <input value="100" name="coord_0">
+                    <input value="10" name="coord_0">
+                </td>
+                <td> 
+                    <input value="650" name="coord_1">
+                    <input value="100" name="coord_1">
+                    <input value="100" name="coord_1">
+                </td>
+                <td> 
+                    <input value="200" name="coord_2">
+                    <input value="400" name="coord_2">
+                    <input value="1" name="coord_2">
+                </td>
+                <td> 
+                    <input value="650" name="coord_3">
+                    <input value="400" name="coord_3">
+                    <input value="1" name="coord_3">
+                </td>
+            </tr>
+            <tr>
+                <b><td>coord_1</td></b>
+                <b><td>coord_2</td></b>
+                <b><td>coord_3</td></b>
+                <b><td>coord_4</td></b>
+            </tr>
+      </table>
+      <button id="button" style="position:relative;left:51%;color:green;" onclick="hide()">hide</button>
+      <div id="logo" style="margin-top:-5px;display:block;">
+      <table id="A_matrix" class="matrix">
         <tbody><tr>
           <td> <input value="1" id="A_0"> </td>
           <td> <input value="0" id="A_1"> </td>
@@ -250,6 +279,11 @@
             </tbody>
           </table>
         </center>
+        </div>
+<!--        <div id="logo" style="margin-top:10px;display:block;">
+            <button style="position:relative;left:50%;" onclick="hide()">hide</button>
+            <span style="color:#00FF00;font-size:100px;">KALMAN</span>
+        </div>-->
         <br><br>
     </div>
   </div>

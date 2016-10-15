@@ -133,14 +133,13 @@ $(function() {
 
 /*** ON DOCUMENT READY: start animation and setup event listeners ***/
 $(document).ready(function() {
-
   // setup websocket
   var ws = new WebSocket("ws://localhost:8080/");
   ws.onmessage = function (event) {
     locMsg = event.data;
     loc = locMsg.split(",").map(function(str) {return parseFloat(str);});
-    console.log(locMsg);
-    console.log(loc);
+    //console.log(locMsg);
+    //console.log(loc);
     if (isNaN(loc[0]) || isNaN(loc[1])) {
       return;
     }

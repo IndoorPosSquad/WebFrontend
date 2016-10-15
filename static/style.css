@@ -44,3 +44,8 @@
 	height: 30px;
 	text-align: center;
 }
+.coord td input {
+	width: 20%;
+	height: 110%;
+	text-align: center;
+}

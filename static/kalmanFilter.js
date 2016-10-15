@@ -36,6 +36,8 @@ var canvas;
 var ctx;
 var xPos;
 var yPos;
+var coord;
+var show = true;
 
 // Kalman Filter Values:
 var X_NOISE = 0;
@@ -156,13 +158,92 @@ function Point(color) {
                 ctx.strokeStyle = this.color;
                 ctx.lineWidth = PIX_SIZE;
                 ctx.beginPath();
-                        ctx.moveTo(this.lastX, this.lastY);
-                        ctx.lineTo(this.x, this.y);
-                        ctx.stroke();
+                ctx.moveTo(this.lastX, this.lastY);
+                ctx.lineTo(this.x, this.y);
+                ctx.stroke();
                 ctx.restore();
+                PrintGridlines();//print gridlines
+                CoordValue();//print four coords
         }
 }
+/*
+    print gridlines
+*/
+function PrintGridlines()
+{
+    ctx.lineWidth = 2;
+    // print abscissa
+    for( var i = 1; i * 80 < canvas.height; i++ ){
+        ctx.globalAlpha=0.1;
+        ctx.strokeStyle = 'blue';
+        ctx.beginPath();
+        ctx.moveTo(0,i * 80);
+        ctx.lineTo(canvas.width,i* 80);
+        ctx.stroke();
+        
+        ctx.font="10px Arial";   
+        var y_axis=i*80+"";  
+        ctx.fillText(y_axis,10,i*80);    
+    }
+    //print ordinate
+    for( var j = 1; j * 80 < canvas.width; j++ ){
+        ctx.globalAlpha=0.1;
+        ctx.strokeStyle = 'yellow';
+        ctx.beginPath();
+        ctx.moveTo(j * 80, 0);
+        ctx.lineTo(j * 80, canvas.height);
+        ctx.stroke();
+        
+        ctx.font="10px Arial";   
+        var x_axis=j*80+"";  
+        ctx.fillText(x_axis,j*80,20);   
 
+    }
+}
+/*
+    Print coord
+*/
+function PrintCoord(x,y)
+{
+    var word_x = parseInt(x)-10;
+    var word_y = parseInt(y)-10;
+    ctx.beginPath();
+    ctx.strokeStyle = '#00FF00';
+    ctx.strokeText(coord,word_x, word_y);
+    ctx.arc(x,y,4,0,2*10);
+    ctx.stroke();
+    ctx.fillStyle = '#00FF00';
+    ctx.fill();
+}
+function CoordValue() {
+    for(var i=0;i<4;i++)
+        {
+            coord = "coord_"+i;
+            var coordX = document.getElementsByName(coord)[0].value;
+            var coordY = document.getElementsByName(coord)[1].value;
+            //console.log(coordX);
+            //console.log(coordY);
+            PrintCoord(coordX,coordY); 
+        }
+}
+/* 
+    hide logo 
+*/
+function hide(){
+    var hide_logo = document.getElementById("logo");
+    var button_logo = document.getElementById("button");
+    if(show)
+        {
+             hide_logo.setAttribute("style","display:none;");
+             button_logo.innerHTML="show";
+        }
+    else 
+        {
+           hide_logo.setAttribute("style","display:block;");
+            button_logo.innerHTML="hide";
+        }
+    show = !show;
+}
 
 /* RealPoint: display a point by the actual measurement (after noise) */
 function RealPoint(x, y) {
@@ -331,7 +412,7 @@ function frame() {
  */
 function updatePosition(pos){
         // no position updates if animation is paused
-        console.log(pos);
+        //console.log(pos);
         if(!running)
                 return;
 
