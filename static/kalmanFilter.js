@@ -173,30 +173,30 @@ function PrintGridlines()
 {
     ctx.lineWidth = 2;
     // print abscissa
-    for( var i = 1; i * 80 < canvas.height; i++ ){
+    for( var i = 1; i * 30 < canvas.height; i++ ){
         ctx.globalAlpha=0.1;
         ctx.strokeStyle = 'blue';
         ctx.beginPath();
-        ctx.moveTo(0,i * 80);
-        ctx.lineTo(canvas.width,i* 80);
+        ctx.moveTo(0,i * 30);
+        ctx.lineTo(canvas.width,i* 30);
         ctx.stroke();
         
         ctx.font="10px Arial";   
-        var y_axis=i*80+"";  
-        ctx.fillText(y_axis,10,i*80);    
+        var y_axis=i*30+"";  
+        ctx.fillText(y_axis,10,i*30);    
     }
     //print ordinate
-    for( var j = 1; j * 80 < canvas.width; j++ ){
+    for( var j = 1; j * 30 < canvas.width; j++ ){
         ctx.globalAlpha=0.1;
-        ctx.strokeStyle = 'yellow';
+        ctx.strokeStyle = 'blue';
         ctx.beginPath();
-        ctx.moveTo(j * 80, 0);
-        ctx.lineTo(j * 80, canvas.height);
+        ctx.moveTo(j * 30, 0);
+        ctx.lineTo(j * 30, canvas.height);
         ctx.stroke();
         
         ctx.font="10px Arial";   
-        var x_axis=j*80+"";  
-        ctx.fillText(x_axis,j*80,20);   
+        var x_axis=j*30+"";  
+        ctx.fillText(x_axis,j*30,20);   
 
     }
 }
