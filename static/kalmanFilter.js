@@ -162,8 +162,6 @@ function Point(color) {
                 ctx.lineTo(this.x, this.y);
                 ctx.stroke();
                 ctx.restore();
-                PrintGridlines();//print gridlines
-                CoordValue();//print four coords
         }
 }
 /*
@@ -180,10 +178,10 @@ function PrintGridlines()
         ctx.moveTo(0,i * 30);
         ctx.lineTo(canvas.width,i* 30);
         ctx.stroke();
-        
-        ctx.font="10px Arial";   
-        var y_axis=i*30+"";  
-        ctx.fillText(y_axis,10,i*30);    
+
+        ctx.font="10px Arial";
+        var y_axis=i*30+"";
+        ctx.fillText(y_axis,10,i*30);
     }
     //print ordinate
     for( var j = 1; j * 30 < canvas.width; j++ ){
@@ -193,10 +191,10 @@ function PrintGridlines()
         ctx.moveTo(j * 30, 0);
         ctx.lineTo(j * 30, canvas.height);
         ctx.stroke();
-        
-        ctx.font="10px Arial";   
-        var x_axis=j*30+"";  
-        ctx.fillText(x_axis,j*30,20);   
+
+        ctx.font="10px Arial";
+        var x_axis=j*30+"";
+        ctx.fillText(x_axis,j*30,20);
 
     }
 }
@@ -215,19 +213,63 @@ function PrintCoord(x,y)
     ctx.fillStyle = '#00FF00';
     ctx.fill();
 }
-function CoordValue() {
-    for(var i=0;i<4;i++)
-        {
-            coord = "coord_"+i;
-            var coordX = document.getElementsByName(coord)[0].value;
-            var coordY = document.getElementsByName(coord)[1].value;
-            //console.log(coordX);
-            //console.log(coordY);
-            PrintCoord(coordX,coordY); 
-        }
+
+function RealPosition() {
+  // ws.send("CALIB,100,100,10,KAL_X,KAL_Y,LAST_Z")
+  coord = "real_position";
+  msg_arr = [];
+  msg_arr.push(document.getElementsByName(coord)[0].value);  // real_x
+  msg_arr.push(document.getElementsByName(coord)[1].value);  // real_y
+  msg_arr.push(document.getElementsByName(coord)[2].value);  // real_z
+  msg_arr.push(Math.round(last_x.elements[0]));              // k_x
+  msg_arr.push(Math.round(last_x.elements[1]));              // k_y
+  msg_arr.push(last_z);   // k_z
+
+  msg = "CALIB," + msg_arr.join(",");
+  console.log(msg);
+  ws.send(msg);
 }
-/* 
-    hide logo 
+var coordsValue = [0,0,0,0];
+function CoordValue() {
+  var tempCoordsValue = [0, 0, 0, 0];
+  for(var i=0;i<4;i++)
+  {
+    coord = "coord_"+i;
+    var coordX = document.getElementsByName(coord)[0].value;
+    var coordY = document.getElementsByName(coord)[1].value;
+    var coordZ = document.getElementsByName(coord)[2].value;
+    //console.log(coordX);
+    //console.log(coordY);
+    tempCoordsValue[i] = {x: coordX, y: coordY, z:coordZ};
+    PrintCoord(coordX,coordY);
+  }
+  // send back to server if changed
+  for(var i=0;i<4;i++)
+  {
+    if (coordsValue[i].x != tempCoordsValue[i].x ||
+        coordsValue[i].y != tempCoordsValue[i].y ||
+        coordsValue[i].z != tempCoordsValue[i].z) {
+      coordsValue = tempCoordsValue;
+      sendCoordsValue(coordsValue);
+      return;
+    }
+  }
+}
+
+function serializeCoordsValue(coordsValue) {
+  return coordsValue.map(function(coord) {
+    return coord.x + "," + coord.y + "," + coord.z;
+  }).join(",");
+}
+// serializeCoordsValue([{x:1,y:2,z:3},{x:0,y:0,z:0}]) => "1,2,3,0,0,0"
+
+function sendCoordsValue(coordsValue) {
+  msg = "COORD," + serializeCoordsValue(coordsValue);
+  console.log(msg);
+  ws.send(msg);
+}
+/*
+    hide logo
 */
 function hide(){
     var hide_logo = document.getElementById("logo");
@@ -237,7 +279,7 @@ function hide(){
              hide_logo.setAttribute("style","display:none;");
              button_logo.innerHTML="show";
         }
-    else 
+    else
         {
            hide_logo.setAttribute("style","display:block;");
             button_logo.innerHTML="hide";
@@ -357,6 +399,7 @@ function frame() {
         last_P = cur_P;
         /**************************/
 
+        console.log(cur_x.elements[0], cur_x.elements[1]);
         kPoints.push(new KalmanPoint(cur_x.elements[0], cur_x.elements[1]));
 
         // run prediction for n frames (only if prediction is on):
@@ -400,6 +443,10 @@ function frame() {
                         pPoints[i].draw(ctx);
                 }
         }
+
+        PrintGridlines();//print gridlines
+        CoordValue();//print four coords
+        //RealPosition();
 
         // call next animation frame
         animationHandle = setTimeout(frame, 1000/FPS);

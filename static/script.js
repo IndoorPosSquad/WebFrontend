@@ -143,12 +143,13 @@ $(document).ready(function() {
   ws.onmessage = function (event) {
     locMsg = event.data;
     loc = locMsg.split(",").map(function(str) {return parseFloat(str);});
-    //console.log(locMsg);
-    //console.log(loc);
+    console.log(locMsg);
+    console.log(loc);
     if (isNaN(loc[0]) || isNaN(loc[1])) {
       return;
     }
-    updatePosition({X: loc[0] * 200 + 250, Y:loc[1] * 200 + 250});
+    updatePosition({X: loc[0] * 100, Y:loc[1] * 100});
+    last_z = loc[2] * 100;
   };
 
   // start animating the Kalman Filter simulation
