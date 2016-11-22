@@ -138,8 +138,8 @@ $(document).ready(function() {
   // setup websocket
   // ws.send("COORD,100,100,10,200,200,10,100,200,10,200,100,10")
   // ws.send("CALIB,100,100,10,KAL_X,KAL_Y,LAST_Z")
-  ws = new WebSocket("ws://10.102.18.202:8080/pos");
-  //ws = new WebSocket("ws://localhost:8080/");
+  //ws = new WebSocket("ws://10.102.18.202:8080/pos");
+  ws = new WebSocket("ws://localhost:8080/");
   ws.onmessage = function (event) {
     locMsg = event.data;
     loc = locMsg.split(",").map(function(str) {return parseFloat(str);});

@@ -1,0 +1,3 @@
+python mock_server.py
+python -m SimpleHTTPServer 3000
+python -m http.server 3000
